@@ -7,8 +7,7 @@ import glob
 # TODO: Support other compilers
 # TODO: Build 'stdafx.h' as a precompiled header
 cc = 'clang'
-options = ['-Wall', '-Wextra', '-g']
-
+options = ['-Wall', '-Wextra', '--include-directory', 'vendor', '-O2']
 
 def run(args):
     completed = subprocess.run(args)

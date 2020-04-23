@@ -3,8 +3,12 @@
 #include "stdafx.h"
 #include "draw.h"
 
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <stb/stb_sprintf.h>
+#include <time.h>
+
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "gdi32.lib")
 #pragma comment(lib, "kernel32.lib")
@@ -14,7 +18,7 @@ static Texture backBuffer;
 
 static void displayBuffer(HWND hwnd, HDC deviceContext)
 {
-	RECT rect;
+	RECT rect = {};
 	GetClientRect(hwnd, &rect);
 	int width = rect.right - rect.left;
 	int height = rect.bottom - rect.top;
@@ -122,7 +126,15 @@ int WINAPI WinMain(
 	while (GetMessage(&msg, hwnd, 0, 0) && !quit) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
+
+		clock_t startClock = clock();
 		draw(&backBuffer);
+		clock_t endClock = clock();
+		size_t frameTimeMS = ((endClock - startClock) * 1000) / CLOCKS_PER_SEC;
+		char buffer[255];
+		stbsp_snprintf(buffer, sizeof(buffer),"QK - %dms (%dx%d)", frameTimeMS, backBuffer.width, backBuffer.height);
+		SetWindowTextA(hwnd, buffer);
+
 		HDC dc = GetDC(hwnd);
 		displayBuffer(hwnd, dc);
 		ReleaseDC(hwnd, dc);
