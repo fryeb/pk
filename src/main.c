@@ -18,7 +18,7 @@ static Texture backBuffer;
 
 static void displayBuffer(HWND hwnd, HDC deviceContext)
 {
-	RECT rect = {};
+	RECT rect = {0};
 	GetClientRect(hwnd, &rect);
 	int width = rect.right - rect.left;
 	int height = rect.bottom - rect.top;
@@ -63,7 +63,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		EndPaint(hwnd, &paint);
 	} break;
 	case WM_SIZE: {
-		RECT clientRect = {};
+		RECT clientRect = {0};
 		GetClientRect(hwnd, &clientRect);
 		backBuffer.width = clientRect.right - clientRect.left;
 		backBuffer.height = clientRect.bottom - clientRect.top;
@@ -112,7 +112,7 @@ int WINAPI WinMain(
 	}
 
 	HWND hwnd = CreateWindowExA(
-		0, wcex.lpszClassName, "QK", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
+		0, wcex.lpszClassName, "PK", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL,
 		hInstance, NULL);
 
@@ -132,7 +132,7 @@ int WINAPI WinMain(
 		clock_t endClock = clock();
 		size_t frameTimeMS = ((endClock - startClock) * 1000) / CLOCKS_PER_SEC;
 		char buffer[255];
-		stbsp_snprintf(buffer, sizeof(buffer),"QK - %dms (%dx%d)", frameTimeMS, backBuffer.width, backBuffer.height);
+		stbsp_snprintf(buffer, sizeof(buffer),"PK - %dms (%dx%d)", frameTimeMS, backBuffer.width, backBuffer.height);
 		SetWindowTextA(hwnd, buffer);
 
 		HDC dc = GetDC(hwnd);
