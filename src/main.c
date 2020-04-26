@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 #include "draw.h"
+#include "font.h"
 
 
 #define WIN32_LEAN_AND_MEAN
