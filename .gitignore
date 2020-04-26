@@ -68,3 +68,11 @@ meson-logs/
 meson-private/
 *@exe
 *.ninja
+
+## Visual Studio
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.user
+*.log
+*.tlog

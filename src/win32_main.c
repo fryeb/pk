@@ -16,6 +16,8 @@
 
 static bool quit = false;
 static Texture backBuffer;
+static DrawConfig drawConfig;
+static DrawResources drawResources;
 
 static void displayBuffer(HWND hwnd, HDC deviceContext)
 {
@@ -78,7 +80,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		backBuffer.memory = (uint32_t*)VirtualAlloc(0, backBufferSize,
 		                                            MEM_COMMIT, PAGE_READWRITE);
 		backBuffer.pitch = backBuffer.width;
-		draw(&backBuffer);
+		draw(&backBuffer, &drawConfig, &drawResources);
 	} break;
 	default: {
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -100,6 +102,13 @@ int WINAPI WinMain(
 
 	// TODO: Handle DPI changes
 	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+
+	drawConfig.textColor = 0xFFFFFFFF;
+	drawConfig.clearColor = 0x00393642;
+	drawConfig.mainFontPath = "./res/Inconsolata-VF.ttf";
+	drawConfig.mainFontSize = 200;
+	drawResources = loadDrawResources(&drawConfig);
+
 	WNDCLASSEXA wcex = {
 		.cbSize = sizeof(wcex),
 		.style = CS_HREDRAW | CS_VREDRAW,
@@ -131,7 +140,7 @@ int WINAPI WinMain(
 		DispatchMessage(&msg);
 
 		clock_t startClock = clock();
-		draw(&backBuffer);
+		draw(&backBuffer, &drawConfig, &drawResources);
 		clock_t endClock = clock();
 		size_t frameTimeMS = ((endClock - startClock) * 1000) / CLOCKS_PER_SEC;
 		char buffer[255];
@@ -142,6 +151,8 @@ int WINAPI WinMain(
 		displayBuffer(hwnd, dc);
 		ReleaseDC(hwnd, dc);
 	}
+
+	freeDrawResources(&drawResources);
 
 	return 0;
 }

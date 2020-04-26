@@ -27,6 +27,7 @@ static void* loadFile(const char* path, size_t* pSize) {
 Font createFont(const char* path, int32_t height) {
 	size_t fontFileSize = 0;
 	uint8_t* fontFileData = loadFile(path, &fontFileSize);
+	assert(fontFileData);
 
 	// Setup font
 	int32_t offset = stbtt_GetFontOffsetForIndex(fontFileData, 0);
@@ -45,6 +46,7 @@ Font createFont(const char* path, int32_t height) {
 	int32_t numGlyphs = info.numGlyphs;
 	font.codepoints = calloc(numGlyphs, sizeof(*font.codepoints));
 	font.glyphs = calloc(numGlyphs, sizeof(*font.glyphs));
+	font.glyphCount = numGlyphs;
 	assert(numGlyphs > 0);
 	int32_t codepoint = -1;
 	for (int32_t i = 0; i < numGlyphs; i++) {
@@ -62,9 +64,11 @@ Font createFont(const char* path, int32_t height) {
 		glyph.data = stbtt_GetGlyphBitmap(
 			&info, 0, font.scale, glyphIndex,
 			&glyph.width, &glyph.height, &glyph.offsetX, &glyph.offsetY);
-		int32_t dx = 0;
 		int32_t leftSideBearing = 0;
+		int32_t dx = 0;
 		stbtt_GetGlyphHMetrics(&info, glyphIndex, &dx, &leftSideBearing);
+		glyph.dx = font.scale * dx;
+		font.glyphs[i] = glyph;
 	}
 
 	free(fontFileData);
@@ -76,17 +80,17 @@ Font createFont(const char* path, int32_t height) {
 //	- Hash table
 Glyph findGlyph(const Font* font, int32_t codepoint) {
 	for (int32_t i = 0; i < font->glyphCount; i++) {
-		if (font->codepoints[i] == codepoint)
+		if (font->codepoints[i] == codepoint) {
 			return font->glyphs[i];
+		}
 	}
-
 	return (Glyph){0};
 }
 
 void destroyFont(Font* font) {
 	free(font->codepoints);
 	for (size_t i = 0; i < font->glyphCount; i++) {
-		//stbtt_FreeBitmap(font->glyphs[i].data, NULL);
+		stbtt_FreeBitmap(font->glyphs[i].data, NULL);
 	}
 	free(font->glyphs);
 	*font = (Font){0};
