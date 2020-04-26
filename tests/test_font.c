@@ -6,10 +6,7 @@ UTEST(font, example) {
 }
 
 UTEST(font, create) {
-	// TODO: Make this platform agnostic
-	printf("testing font.");
-	Font font = createFont("C:\\Windows\\Fonts\\consola.ttf", 14);
-	printf("tested font.");
+	Font font = createFont("../res/Inconsolata-VF.ttf", 14);
 	ASSERT_NE(font.codepoints, NULL);
 }
 
