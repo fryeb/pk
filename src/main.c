@@ -98,6 +98,8 @@ int WINAPI WinMain(
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
+	// TODO: Handle DPI changes
+	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 	WNDCLASSEXA wcex = {
 		.cbSize = sizeof(wcex),
 		.style = CS_HREDRAW | CS_VREDRAW,
