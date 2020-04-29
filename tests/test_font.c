@@ -16,12 +16,12 @@ UTEST_F_TEARDOWN(FontTestFixture) {
 }
 
 UTEST_F(FontTestFixture, search) {
-	ASSERT_NE(findGlyph(&utest_fixture->font, 'a').data, 0);
-	ASSERT_NE(findGlyph(&utest_fixture->font, 'b').data, 0);
-	ASSERT_NE(findGlyph(&utest_fixture->font, 'c').data, 0);
-	ASSERT_NE(findGlyph(&utest_fixture->font, 'd').data, 0);
+	ASSERT_NE(findGlyph(&utest_fixture->font, 'a').data, NULL);
+	ASSERT_NE(findGlyph(&utest_fixture->font, 'b').data, NULL);
+	ASSERT_NE(findGlyph(&utest_fixture->font, 'c').data, NULL);
+	ASSERT_NE(findGlyph(&utest_fixture->font, 'd').data, NULL);
 	// Pound symbol
-	ASSERT_NE(findGlyph(&utest_fixture->font, 0x000000A3).data, 0);
+	ASSERT_NE(findGlyph(&utest_fixture->font, 0x000000A3).data, NULL);
 }
 
 

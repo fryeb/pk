@@ -22,7 +22,7 @@ void logFatal(const char* message, ...) {
 #else /* _WIN32 */
 #include <stdio.h>
 
-static void log(FILE* stream, const char* color, const char* name,
+static void logMessage(FILE* stream, const char* color, const char* name,
                 const char* message, va_list args) {
         fprintf(stream, "%s%s: \x1b[97m", color, name);
         vfprintf(stream, message, args);
@@ -32,7 +32,7 @@ static void log(FILE* stream, const char* color, const char* name,
 void logFatal(const char* message, ...) {
         va_list args;
         va_start(args, message);
-        fprintf(stderr, "\x1b[91m", "fatal error", message, args);
+        logMessage(stderr, "\x1b[91m", "fatal error", message, args);
         va_end(args);
         exit(EXIT_FAILURE);
 }
