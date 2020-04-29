@@ -13,12 +13,14 @@ void blitGlyph(Texture* tex, const Glyph* g, uint32_t color, int32_t x, int32_t 
 	uint32_t fg_rb = color & 0x00FF00FF;
 	uint32_t fg_g = color & 0x0000FF00;
 
-	uint8_t* dest_row = (uint8_t*)((uint64_t)tex->memory + minx * 4 +
+	uint32_t* dest_row = (uint32_t*)((uint64_t)tex->memory + minx * 4 +
 	                               miny * tex->pitch * sizeof(uint32_t));
-	uint8_t* src = (uint8_t*)((uint64_t)g->data + g->width * yoff);
+	uint8_t* src_row = (uint8_t*)((uint64_t)g->data + g->width * yoff);
+	size_t glyph_pitch = g->width * sizeof(uint8_t);
 
 	for (int py = miny; py < maxy; py++) {
-		uint32_t* dest = (uint32_t*)dest_row;
+		uint32_t* dest = dest_row;
+		uint8_t* src = src_row;
 
 		for (int px = minx; px < maxx; px++) {
 			// Background
@@ -36,7 +38,8 @@ void blitGlyph(Texture* tex, const Glyph* g, uint32_t color, int32_t x, int32_t 
 			src++;
 		}
 
-		dest_row += tex->pitch * sizeof(uint32_t);
+		dest_row += tex->pitch;
+		src_row += glyph_pitch;
 	}
 }
 
