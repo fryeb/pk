@@ -1,25 +1,29 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "stdafx.h"
 #include "font.h"
-
-#define STB_TRUETYPE_IMPLEMENTATION
-#include <stb/stb_truetype.h>
+#include "log.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
+#define STB_TRUETYPE_IMPLEMENTATION
+#define STBTT_STATIC
+#include <stb/stb_truetype.h>
+
 static void* loadFile(const char* path, size_t* pSize) {
-	// TODO: Handle missing file
-	FILE* file = fopen(path, "r");
+	FILE* file = fopen(path, "rb");
 	if (!file) {
-		fprintf(stderr, "error: Unable to open file: \"%s\".\n", path);
+		logFatal("Unable to open file: \"%s\".\n", path);
 		return NULL;
 	}
+
 	fseek(file, 0, SEEK_END);
 	*pSize = ftell(file);
 	void* data = calloc(1, *pSize);
 	assert(data);
 	fseek(file, 0, SEEK_SET);
-	size_t elementsRead = fread(data, 1, *pSize, file);
+	size_t elementsRead = fread(data, *pSize, 1, file);
+	assert(elementsRead == 1);
 	fclose(file);
 	return data;
 }
@@ -67,7 +71,7 @@ Font createFont(const char* path, int32_t height) {
 		int32_t leftSideBearing = 0;
 		int32_t dx = 0;
 		stbtt_GetGlyphHMetrics(&info, glyphIndex, &dx, &leftSideBearing);
-		glyph.dx = font.scale * dx;
+		glyph.dx = (int32_t)(font.scale * dx);
 		font.glyphs[i] = glyph;
 	}
 

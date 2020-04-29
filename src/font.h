@@ -3,8 +3,8 @@
 
 typedef struct {
 	uint8_t* data;
-	uint32_t width;
-	uint32_t height;
+	int32_t width;
+	int32_t height;
 	int32_t offsetX;
 	int32_t offsetY;
 	int32_t dx;
