@@ -1,6 +1,7 @@
 #pragma once
 #include "font.h"
 #include "stdafx.h"
+#include "buffer.h"
 
 typedef struct {
 	uint32_t width;
@@ -24,5 +25,5 @@ typedef struct {
 // TODO: Adapt to dpi
 DrawResources loadDrawResources(const DrawConfig *config);
 void freeDrawResources(DrawResources *drawResources);
-void draw(Texture *tex, const DrawConfig *config,
+void draw(Texture *tex, const Buffer* buffer, const DrawConfig *config,
           const DrawResources *drawResources);

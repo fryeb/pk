@@ -20,12 +20,13 @@ typedef struct {
 
 typedef struct {
 	uint8_t* bytes;
-	size_t length;
+	size_t size;
 	size_t capacity;
 	size_t cursor;
 } Buffer;
 
 Buffer createBuffer();
+Buffer createBufferFromFile(const char* path);
 Buffer cloneBuffer(const Buffer* buffer);
 void destroyBuffer(Buffer* buffer);
 

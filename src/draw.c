@@ -72,7 +72,7 @@ void freeDrawResources(DrawResources *drawResources) {
 	destroyFont(&drawResources->mainFont);
 }
 
-void draw(Texture *tex, const DrawConfig *config,
+void draw(Texture *tex, const Buffer* buffer, const DrawConfig *config,
           const DrawResources *drawResources) {
 
 	// Clear screen
@@ -83,6 +83,6 @@ void draw(Texture *tex, const DrawConfig *config,
 		}
 	}
 
-	blitString(tex, &drawResources->mainFont, "Hello, world!", config->textColor, 200, 200);
+	blitString(tex, &drawResources->mainFont, buffer->bytes, config->textColor, 200, 200);
 }
 
