@@ -7,7 +7,6 @@
 #include <stdlib.h>
 
 #define STB_TRUETYPE_IMPLEMENTATION
-#define STBTT_STATIC
 #include <stb/stb_truetype.h>
 
 static void* loadFile(const char* path, size_t* pSize) {

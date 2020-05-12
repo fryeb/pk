@@ -1,10 +1,11 @@
-#pragma once
+#define _CRT_SECURE_NO_WARNINGS
 #include "stdafx.h"
 #include "buffer.h"
 #include "log.h"
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 Buffer createBuffer() {	
 	Buffer result;
@@ -41,7 +42,9 @@ Buffer createBufferFromFile(const char* path) {
 
 	assert(result.bytes);
 	fseek(file, 0, SEEK_SET);
-	size_t elementsRead = fread(result.bytes, 1, result.size, file);
+	fread(result.bytes, 1, result.size, file);
+	// TODO: Read elements properly
+	//size_t elementsRead = fread(result.bytes, 1, result.size, file);
 	//logFatal("Read %d elements, expected %d.\n", elementsRead, result.size);
 	//assert(elementsRead == result.size);
 	fclose(file);
@@ -50,7 +53,7 @@ Buffer createBufferFromFile(const char* path) {
 }
 
 void destroyBuffer(Buffer* buffer) {
-	realloc(buffer->bytes, 0);
+	free(buffer->bytes);
 	*buffer = (Buffer){0};
 }
 

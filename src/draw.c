@@ -82,6 +82,7 @@ void draw(Texture *tex, const Buffer* buffer, const DrawConfig *config,
 		}
 	}
 
-	blitString(tex, &drawResources->mainFont, buffer->bytes, config->textColor, 200, 200);
+	// TODO: Unicode
+	blitString(tex, &drawResources->mainFont, (char*) buffer->bytes, config->textColor, 200, 200);
 }
 

@@ -1,4 +1,3 @@
-#pragma once
 #include "../src/buffer.h"
 
 #include <utest/utest.h>
@@ -41,7 +40,7 @@ UTEST(buffer, hello) {
 	Buffer buffer = createBuffer();
 	const char* str = "Hello, world!\n";
 	insertString(&buffer, str);
-	ASSERT_STREQ(str, buffer.bytes);
+	ASSERT_STREQ(str, (const char*) buffer.bytes);
 	destroyBuffer(&buffer);
 }
 
@@ -50,7 +49,7 @@ UTEST(buffer, clone) {
 	const char* str = "Hello, world!\n";
 	insertString(&buffer, str);
 	Buffer clone = cloneBuffer(&buffer);
-	ASSERT_STREQ(buffer.bytes, clone.bytes);
+	ASSERT_STREQ((const char*) buffer.bytes, (const char*) clone.bytes);
 }
 
 UTEST(buffer, move) {
@@ -58,10 +57,10 @@ UTEST(buffer, move) {
 	insertString(&buffer, "world");
 	applyCommand(&buffer, move(-5));
 	insertString(&buffer, "Hello, ");
-	ASSERT_STREQ("Hello, world", buffer.bytes);
+	ASSERT_STREQ("Hello, world", (const char*) buffer.bytes);
 	applyCommand(&buffer, move(5));
 	insertString(&buffer, "!\n");
-	ASSERT_STREQ("Hello, world!\n", buffer.bytes);
+	ASSERT_STREQ("Hello, world!\n", (const char*) buffer.bytes);
 }
 
 UTEST(buffer, delete) {
@@ -69,33 +68,33 @@ UTEST(buffer, delete) {
 	insertString(&buffer, "Hello, world!\n");
 	applyCommand(&buffer, delete('\n'));
 	applyCommand(&buffer, delete('!'));
-	ASSERT_STREQ("Hello, world", buffer.bytes);
+	ASSERT_STREQ("Hello, world", (const char*) buffer.bytes);
 	applyCommand(&buffer, move(-6));
 	applyCommand(&buffer, delete(','));
-	ASSERT_STREQ("Hello world", buffer.bytes);
+	ASSERT_STREQ("Hello world", (const char*) buffer.bytes);
 }
 
 UTEST(buffer, undo_insert) {
 	Buffer buffer = createBuffer();
 	insertString(&buffer, "Hello, world!\n");
-	ASSERT_STREQ("Hello, world!\n", buffer.bytes);
+	ASSERT_STREQ("Hello, world!\n", (const char*) buffer.bytes);
 	reverseCommand(&buffer, insert('\n'));
 	reverseCommand(&buffer, insert('!'));
-	ASSERT_STREQ("Hello, world", buffer.bytes);
+	ASSERT_STREQ("Hello, world", (const char*) buffer.bytes);
 }
 
 UTEST(buffer, undo_move_delete) {
 	Buffer buffer = createBuffer();
 	insertString(&buffer, "Hello, world!\n");
-	ASSERT_STREQ("Hello, world!\n", buffer.bytes);
+	ASSERT_STREQ("Hello, world!\n", (const char*) buffer.bytes);
 	applyCommand(&buffer, move(-8));
 	applyCommand(&buffer, delete(','));
 	applyCommand(&buffer, move(8));
-	ASSERT_STREQ("Hello world!\n", buffer.bytes);
+	ASSERT_STREQ("Hello world!\n", (const char*) buffer.bytes);
 	reverseCommand(&buffer, move(8));
 	reverseCommand(&buffer, delete(','));
 	reverseCommand(&buffer, move(-8));
-	ASSERT_STREQ("Hello, world!\n", buffer.bytes);
+	ASSERT_STREQ("Hello, world!\n", (const char*) buffer.bytes);
 }
 
 UTEST_MAIN();
