@@ -18,12 +18,12 @@ typedef struct {
 } DrawConfig;
 
 typedef struct {
+	uint32_t dpi;
 	Font mainFont;
 } DrawResources;
 
 // TODO: Load DrawConfig from file
-// TODO: Adapt to dpi
-DrawResources loadDrawResources(const DrawConfig *config);
+DrawResources loadDrawResources(const DrawConfig *config, uint32_t dpi);
 void freeDrawResources(DrawResources *drawResources);
 void draw(Texture *tex, const Buffer* buffer, const DrawConfig *config,
           const DrawResources *drawResources);

@@ -61,10 +61,9 @@ void blitString(Texture* tex, const Font* font, const char* string,
 	}
 }
 
-// TODO: Adjust to DPI
-DrawResources loadDrawResources(const DrawConfig *config) {
+DrawResources loadDrawResources(const DrawConfig *config, uint32_t dpi) {
 	DrawResources result = {0};
-	result.mainFont = createFont(config->mainFontPath, config->mainFontSize);
+	result.mainFont = createFont(config->mainFontPath, (config->mainFontSize * dpi) / 96);
 	return result;
 }
 

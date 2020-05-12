@@ -109,7 +109,7 @@ int WINAPI WinMain(
 	drawConfig.clearColor = 0x00393642;
 	drawConfig.mainFontPath = "./res/Inconsolata-VF.ttf";
 	drawConfig.mainFontSize = 20;
-	drawResources = loadDrawResources(&drawConfig);
+	drawResources.dpi = 0;
 	buffer = createBufferFromFile("README.md");
 
 	WNDCLASSEXA wcex = {
@@ -141,6 +141,11 @@ int WINAPI WinMain(
 	while (GetMessage(&msg, hwnd, 0, 0) && !quit) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
+
+		// TODO: Profile this
+		uint32_t dpi = GetDpiForWindow(hwnd);
+		if (drawResources.dpi != dpi)
+			drawResources = loadDrawResources(&drawConfig, dpi);
 
 		clock_t startClock = clock();
 		draw(&backBuffer, &buffer, &drawConfig, &drawResources);
