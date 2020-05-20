@@ -8,20 +8,19 @@ libm = cc.find_library('m', required: false)
 includes = include_directories('vendor')
 
 src = [
-	'src/win32_main.c',
-	'src/linux_main.c',
 	'src/draw.c',
 	'src/impl.c',
 	'src/font.c',
 	'src/log.c',
 	'src/buffer.c'
-	]
+]
 
-executable('pk', src, include_directories: includes, gui_app: true, dependencies: libm)
+exe_src = src + ['src/linux_main.c', 'src/win32_main.c']
+exe = executable('pk', exe_src, include_directories: includes, gui_app: true, dependencies: libm)
 
 tests = [
-'font',
-'buffer'
+	'font',
+	'buffer'
 ]
 
 foreach test_name : tests
