@@ -16,6 +16,20 @@ src = [
 	'src/log.c',
 	'src/buffer.c'
 	]
+
 executable('pk', src, include_directories: includes, gui_app: true, dependencies: libm)
 
-subdir('tests')
+tests = [
+'font',
+'buffer'
+]
+
+foreach test_name : tests
+	test(
+		test_name,
+		executable(
+			'test' + test_name,
+			src + ['tests/test_' + test_name + '.c'],
+			include_directories: include_directories(['vendor', 'src']),
+			dependencies: libm))
+endforeach
