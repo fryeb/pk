@@ -27,7 +27,7 @@ foreach test_name : tests
 	test(
 		test_name,
 		executable(
-			'test' + test_name,
+			'test_' + test_name,
 			src + ['tests/test_' + test_name + '.c'],
 			include_directories: include_directories(['vendor', 'src']),
 			dependencies: libm))
