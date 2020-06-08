@@ -76,3 +76,9 @@ meson-private/
 *.vcxproj.user
 *.log
 *.tlog
+
+## Build output
+pk
+test_font
+test_buffer
+
