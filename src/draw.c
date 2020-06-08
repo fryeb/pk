@@ -1,4 +1,5 @@
 #include "draw.h"
+#include "log.h"
 
 void blitGlyph(Texture* tex, const Glyph* g, uint32_t color, int32_t x, int32_t y) {
 	int32_t minx = CLAMP(x, 0, (int32_t)tex->width);
@@ -71,7 +72,7 @@ void freeDrawResources(DrawResources *drawResources) {
 	destroyFont(&drawResources->mainFont);
 }
 
-void draw(Texture *tex, const Buffer* buffer, const DrawConfig *config,
+void draw(Texture *tex, const Workbench* bench, const DrawConfig *config,
           const DrawResources *drawResources) {
 
 	// Clear screen
@@ -82,7 +83,19 @@ void draw(Texture *tex, const Buffer* buffer, const DrawConfig *config,
 		}
 	}
 
+	const Font* mainFont = &drawResources->mainFont;
+	Glyph g = findGlyph(mainFont, ' ');
+	int32_t charWidth = g.dx;
+	assert(charWidth > 0);
+	// TODO: EditorConfig
+	const int32_t MAX_LINE_WIDTH = 80;
+	// TODO: Handle all window sizes
+	int32_t panelWidth = MAX_LINE_WIDTH * charWidth;
+	int32_t maxPanelWidth = tex->width / 2;
+	//assert(panelWidth < maxPanelWidth);
+
 	// TODO: Unicode
-	blitString(tex, &drawResources->mainFont, (char*) buffer->bytes, config->textColor, 200, 200);
+	int32_t offsetX = (maxPanelWidth - panelWidth) / 2;
+	blitString(tex, mainFont, (char*) bench->left.buffer.bytes, config->textColor, offsetX, 0);
 }
 

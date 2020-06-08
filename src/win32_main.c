@@ -19,7 +19,7 @@ static bool quit = false;
 static Texture backBuffer;
 static DrawConfig drawConfig;
 static DrawResources drawResources;
-static Buffer buffer;
+static Workbench workbench;
 
 static void displayBuffer(HWND hwnd, HDC deviceContext)
 {
@@ -47,6 +47,15 @@ static void displayBuffer(HWND hwnd, HDC deviceContext)
 		backBuffer.width, backBuffer.height,
 		backBuffer.memory, &info,
 		DIB_RGB_COLORS, SRCCOPY);
+}
+
+static void drawBackBuffer(HWND hwnd) { 
+	// TODO: Profile this
+	uint32_t dpi = GetDpiForWindow(hwnd);
+	if (drawResources.dpi != dpi)
+		drawResources = loadDrawResources(&drawConfig, dpi);
+
+	draw(&backBuffer, &workbench, &drawConfig, &drawResources);
 }
 
 static DWORD errorWin32(const char *msg)
@@ -82,7 +91,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		backBuffer.memory = (uint32_t*)VirtualAlloc(0, backBufferSize,
 		                                            MEM_COMMIT, PAGE_READWRITE);
 		backBuffer.pitch = backBuffer.width;
-		draw(&backBuffer, &buffer, &drawConfig, &drawResources);
+		drawBackBuffer(hwnd);
 	} break;
 	default: {
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -110,7 +119,7 @@ int WINAPI WinMain(
 	drawConfig.mainFontPath = "./res/Inconsolata-VF.ttf";
 	drawConfig.mainFontSize = 20;
 	drawResources.dpi = 0;
-	buffer = createBufferFromFile("README.md");
+	workbench.left.buffer = createBufferFromFile("README.md");
 
 	WNDCLASSEXA wcex = {
 		.cbSize = sizeof(wcex),
@@ -142,13 +151,10 @@ int WINAPI WinMain(
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
-		// TODO: Profile this
-		uint32_t dpi = GetDpiForWindow(hwnd);
-		if (drawResources.dpi != dpi)
-			drawResources = loadDrawResources(&drawConfig, dpi);
-
 		clock_t startClock = clock();
-		draw(&backBuffer, &buffer, &drawConfig, &drawResources);
+
+		drawBackBuffer(hwnd);
+
 		clock_t endClock = clock();
 		size_t frameTimeMS = ((endClock - startClock) * 1000) / CLOCKS_PER_SEC;
 		char buffer[255];
