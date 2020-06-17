@@ -65,6 +65,7 @@ void blitString(Texture* tex, const Font* font, const char* string,
 DrawResources loadDrawResources(const DrawConfig *config, uint32_t dpi) {
 	DrawResources result = {0};
 	result.mainFont = createFont(config->mainFontPath, (config->mainFontSize * dpi) / 96);
+	result.dpi = dpi;
 	return result;
 }
 
@@ -76,6 +77,7 @@ void draw(Texture *tex, const Workbench* bench, const DrawConfig *config,
           const DrawResources *drawResources) {
 
 	// Clear screen
+	// TODO: Replace this with something faster (like a multi-byte memset)
 	uint32_t *pixel = tex->memory;
 	for (size_t y = 0; y < tex->height; y++) {
 		for (size_t x = 0; x < tex->width; x++) {
