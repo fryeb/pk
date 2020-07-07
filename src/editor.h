@@ -6,3 +6,5 @@
 typedef struct {
 	Buffer buffer;
 } Editor;
+
+void destroyEditor(Editor* editor);

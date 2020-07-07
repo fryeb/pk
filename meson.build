@@ -12,7 +12,8 @@ src = [
 	'src/impl.c',
 	'src/font.c',
 	'src/log.c',
-	'src/buffer.c'
+	'src/buffer.c',
+	'src/editor.c'
 ]
 
 exe_src = src + ['src/linux_main.c', 'src/win32_main.c']
@@ -20,7 +21,8 @@ exe = executable('pk', exe_src, include_directories: includes, gui_app: true, de
 
 tests = [
 	'font',
-	'buffer'
+	'buffer',
+	'editor'
 ]
 
 foreach test_name : tests
